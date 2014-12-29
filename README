@@ -1,0 +1,30 @@
+A collection of scripts for modularity evaluation 
+which uses the Fast Community Unfolding algorithm 
+(http://arxiv.org/abs/0803.0476) in its original 
+implementation by authors
+(https://sites.google.com/site/findcommunities/) 
+to compute Q values of EVS-compartible networks.
+
+The suite works on Linux and perhaps on MacOS.
+
+-----
+
+USAGE:
+
+Download the "updated" version of the code from 
+the site and unzip in the repo folder. Compile 
+the code (adding "#include <unistd.h>" at the top 
+of main_community.cpp may be helpful). Create the 
+necessary pipes by running
+
+$ ./makePipes.sh
+
+After that, executing
+
+$ ./massQ.sh
+
+causes any networks written into "in" pipe to be 
+evaluated and the evaluation sent into stdout.
+
+For now, the app only works with Espinosa-Soto Wagner 
+style boolean networks.
