@@ -19,12 +19,17 @@ necessary pipes by running
 
 $ ./makePipes.sh
 
-After that, executing
+After that, sequences of lines in the format
 
-$ ./massQ.sh
+<id0> <weights0>
+<id1> <weights1>
+...
 
-causes any networks written into "in" pipe to be 
-evaluated and the evaluation sent into stdout.
+can be piped through the script massQ.sh to yield
+
+<id0> <q0>
+<id1> <q1>
+...
 
 For now, the app only works with Espinosa-Soto Wagner 
 style boolean networks.

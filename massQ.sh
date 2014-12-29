@@ -1,6 +1,5 @@
 #!/bin/bash
 
-IN="./in"
 TXT="./txt"
 BIN="./bin"
 OUT="./out"
@@ -10,7 +9,7 @@ COMMCONV="${COMMDIR}convert"
 COMMCOMM="${COMMDIR}community"
 
 IFS=$'\n'
-for line in `cat $IN`; do
+for line in `cat`; do
 	ID=`echo ${line} | cut -d ' ' -f 1`
 	MATRIXSTR=`echo ${line} | cut -d ' ' -f 2-`
 	echo $MATRIXSTR | ./matrix2list.py > $TXT &
