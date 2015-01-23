@@ -14,7 +14,7 @@ USAGE:
 Download the "updated" version of the code from 
 the site:
 
-wget "https://sites.google.com/site/findcommunities/newversion/community.tgz"
+wget -O community.tgz "https://sites.google.com/site/findcommunities/newversion/community.tgz"
 
 unzip in the repo folder. Compile 
 the code (adding "#include <unistd.h>" at the top 
