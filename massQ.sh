@@ -27,7 +27,7 @@ IFS=$'\n'
 for line in `cat`; do
 	ID=`echo ${line} | cut -d ' ' -f 1`
 	MATRIXSTR=`echo ${line} | cut -d ' ' -f 2-`
-	echo $MATRIXSTR | ./matrix2list.py > $TXT &
+	echo $MATRIXSTR | python ./matrix2list.py > $TXT &
 	$COMMCONV -i $TXT -o $BIN &
 	QVAL=`$COMMCOMM $BIN -l -1 -v 2>&1 | tail -1`
 	echo $ID $QVAL
