@@ -30,5 +30,8 @@ for line in `cat`; do
 	echo $MATRIXSTR | ./matrix2list.py > $TXT &
 	$COMMCONV -i $TXT -o $BIN &
 	QVAL=`$COMMCOMM $BIN -l -1 -v 2>&1 | tail -1`
+	if [ "$QVAL" == "Begin:" ]; then
+		QVAL=0
+	fi
 	echo $ID $QVAL
 done
