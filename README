@@ -12,7 +12,11 @@ The suite works on Linux and perhaps on MacOS.
 USAGE:
 
 Download the "updated" version of the code from 
-the site and unzip in the repo folder. Compile 
+the site:
+
+wget -O community.tgz "https://sites.google.com/site/findcommunities/newversion/community.tgz"
+
+unzip in the repo folder. Compile 
 the code (adding "#include <unistd.h>" at the top 
 of main_community.cpp may be helpful). Create the 
 necessary pipes by running
