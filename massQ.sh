@@ -2,7 +2,7 @@
 
 # Parsing CLI and taking care of help
 
-TEMP=`getopt -o i:o:h: --long help,input:,output:,hidden: -- "$@"`
+TEMP=`getopt -o wi:o:h: --long weights,help,input:,output:,hidden: -- "$@"`
 eval set -- "$TEMP"
 
 function printUsage {
@@ -29,6 +29,8 @@ while true; do
 			OUTPUTN="$2"; shift 2;;
 		-h|--hidden)
 			HIDDENN="$2"; shift 2;;
+		-w|--weights)
+			WEIGHTS="-w"; shift;;
 		--) shift; break;;
 		*) echo "Internal error!" ; exit 1;;
 	esac
@@ -69,8 +71,8 @@ IFS=$'\n'
 for line in `cat`; do
 	ID=`echo ${line} | cut -d ' ' -f 1`
 	MATRIXSTR=`echo ${line} | cut -d ' ' -f 2-`
-	echo $MATRIXSTR | python $GTOL $INPUTN $OUTPUTN $HIDDENN > $TXT &
-	$COMMCONV -i $TXT -o $BIN &
+	echo $MATRIXSTR | python $GTOL $INPUTN $OUTPUTN $HIDDENN $WEIGHTS > $TXT &
+	$COMMCONV -i $TXT -o $BIN $WEIGHTS &
 	QVAL=`$COMMCOMM $BIN -l -1 -v 2>&1 | tail -1`
 	if [ "$QVAL" == "Begin:" ]; then
 		QVAL=0

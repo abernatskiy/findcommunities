@@ -48,7 +48,7 @@ cliParser = argparse.ArgumentParser(description='genome2list.py - converiting se
 cliParser.add_argument('inNodes', metavar='inNodes', nargs='?', default=None, type=int, help='number of input nodes')
 cliParser.add_argument('outNodes', metavar='outNodes', nargs='?', default=None, type=int, help='number of output nodes')
 cliParser.add_argument('hiddenNodes', metavar='hiddenNodes', nargs='?', default=None, type=int, help='number of hidden nodes')
-cliParser.add_argument('--weights', action='store_true', help='output a weighted graph')
+cliParser.add_argument('-w', action='store_true', help='output a weighted graph')
 
 args = cliParser.parse_args()
 if args.inNodes is not None and args.outNodes is None:
@@ -59,8 +59,8 @@ if args.inNodes is not None and args.outNodes is None:
 mline = sys.stdin.read()
 weights = map(float, mline.split(' '))
 if args.inNodes is None and args.outNodes is None:
-	printSelfConnectedGraph(weights, useWeights=args.weights)
+	printSelfConnectedGraph(weights, useWeights=args.w)
 elif args.hiddenNodes is None:
-	printInputOutputGraph(weights, args.inNodes, args.outNodes, useWeights=args.weights)
+	printInputOutputGraph(weights, args.inNodes, args.outNodes, useWeights=args.w)
 else:
-	printInputHiddenOutputGraph(weights, args.inNodes, args.outNodes, args.hiddenNodes, useWeights=args.weights)
+	printInputHiddenOutputGraph(weights, args.inNodes, args.outNodes, args.hiddenNodes, useWeights=args.w)
