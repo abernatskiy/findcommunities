@@ -2,13 +2,13 @@
 
 # Parsing CLI and taking care of help
 
-TEMP=`getopt -o wi:o:h: --long weights,help,input:,output:,hidden: -- "$@"`
+TEMP=`getopt -o w:i:o:h: --long weights:,help,input:,output:,hidden: -- "$@"`
 eval set -- "$TEMP"
 
 function printUsage {
 cat << EOF
 
-Usage: massQ.sh [<txtpipe> <binpipe>] [-i|--input inputNodes -o|--output outputNodes [-h|--hidden hiddenNodes]]
+Usage: massQ.sh [<txtpipe> <binpipe>] [-w|--weights <weightsPipe>] [-i|--input <inputNodes> -o|--output <outputNodes> [-h|--hidden <hiddenNodes>]]
 
 Takes network genomes in evs format as its standard input, produces a modularity score and writes it into
 the standard output. Network topology is given by -i,-o and -h parameter; if no parameters are given,
@@ -30,7 +30,7 @@ while true; do
 		-h|--hidden)
 			HIDDENN="$2"; shift 2;;
 		-w|--weights)
-			WEIGHTS="-w"; shift;;
+			WEIGHTS="-w"; WEIGHTS_PIPE="$2"; shift 2;;
 		--) shift; break;;
 		*) echo "Internal error!" ; exit 1;;
 	esac
@@ -72,8 +72,8 @@ for line in `cat`; do
 	ID=`echo ${line} | cut -d ' ' -f 1`
 	MATRIXSTR=`echo ${line} | cut -d ' ' -f 2-`
 	echo $MATRIXSTR | python $GTOL $INPUTN $OUTPUTN $HIDDENN $WEIGHTS > $TXT &
-	$COMMCONV -i $TXT -o $BIN $WEIGHTS &
-	QVAL=`$COMMCOMM $BIN -l -1 -v 2>&1 | tail -1`
+	$COMMCONV -i $TXT -o $BIN $WEIGHTS $WEIGHTS_PIPE &
+	QVAL=`$COMMCOMM $BIN -l -1 -v $WEIGHTS $WEIGHTS_PIPE 2>&1 | tail -1`
 	if [ "$QVAL" == "Begin:" ]; then
 		QVAL=0
 	fi
