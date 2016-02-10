@@ -62,7 +62,7 @@ cliParser = argparse.ArgumentParser(description='genome2list.py - converiting se
 																						'Always use inNodes and outNodes together.')
 cliParser.add_argument('inNodes', metavar='inNodes', nargs='?', default=None, type=int, help='number of input nodes')
 cliParser.add_argument('outNodes', metavar='outNodes', nargs='?', default=None, type=int, help='number of output nodes')
-cliParser.add_argument('hiddenNodes', metavar='hiddenNodes', nargs='?', default=None, type=int, help='number of hidden nodes')
+cliParser.add_argument('hiddenNodes', metavar='hiddenNodes', nargs='?', default=None, type=int, help='number of hidden nodes, negative means recursive')
 cliParser.add_argument('-w', action='store_true', help='output a weighted graph')
 
 args = cliParser.parse_args()
