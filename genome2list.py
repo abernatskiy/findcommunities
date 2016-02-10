@@ -26,20 +26,35 @@ def printMatrixAsList(matArr, N, M, firstNode=0, sameNodes=False, useWeights=Fal
 def printSelfConnectedGraph(vals, useWeights=False):
 	dim = np.sqrt(len(vals))
 	if not dim.is_integer():
-		raise ValueError("Error: input matrix must be square")
+		raise ValueError('Error: input matrix must be square')
 	dim = int(dim)
 	printMatrixAsList(vals, dim, dim, sameNodes=True, useWeights=useWeights)
 
 def printInputOutputGraph(vals, inNodes, outNodes, useWeights=False):
 	if len(vals) != inNodes*outNodes:
-		raise ValueError("Error: wrong input size for the specified dimensions (" + str(len(vals)) + "!=" + str(inNodes) + '*' + str(outNodes) + ')')
+		raise ValueError('Error: wrong input size for the specified dimensions (' + str(len(vals)) + '!=' + str(inNodes) + '*' + str(outNodes) + ')')
 	printMatrixAsList(vals, inNodes, outNodes, useWeights=useWeights)
 
-def printInputHiddenOutputGraph(vals, inNodes, outNodes, hiddenNodes, useWeights=False):
-	if len(vals) != inNodes*hiddenNodes + hiddenNodes*outNodes:
+def printInputHiddenOutputGraph(vals, inNodes, outNodes, hiddenNodes, useWeights=False, recurrentHidden=False):
+	requiredVals = inNodes*hiddenNodes + hiddenNodes*outNodes
+	requiredVals += hiddenNodes*hiddenNodes if recurrentHidden else 0
+	if len(vals) != requiredVals:
+		errorStr = 'Error: wrong input size for the specified dimensions (' + str(len(vals)) + '!=' + str(inNodes) + '*' + str(hiddenNodes) + ' + ' + str(hiddenNodes) + '*' + str(outNodes)
+		errorStr += '+' + str(hiddenNodes) + '*' + str(hiddenNodes) + ')' if recurrentHidden else ')'
 		raise ValueError("Error: wrong input size for the specified dimensions (" + str(len(vals)) + "!=" + str(inNodes) + '*' + str(hiddenNodes) + ' + ' + str(hiddenNodes) + '*' + str(outNodes) + ')')
-	printMatrixAsList(vals[:inNodes*hiddenNodes], inNodes, hiddenNodes, useWeights=useWeights)
-	printMatrixAsList(vals[inNodes*hiddenNodes:], hiddenNodes, outNodes, firstNode=inNodes, useWeights=useWeights)
+
+	curWtsSt = 0
+	curNodeSt = 0
+
+	printMatrixAsList(vals[curWtsSt:curWtsSt+inNodes*hiddenNodes], inNodes, hiddenNodes, firstNode=curNodeSt, useWeights=useWeights)
+	curWtsSt = inNodes*hiddenNodes
+	curNodeSt = inNodes
+
+	if recurrentHidden:
+		printMatrixAsList(vals[curWtsSt:curWtsSt+hiddenNodes*hiddenNodes], hiddenNodes, hiddenNodes, firstNode=curNodeSt, sameNodes=True, useWeights=useWeights)
+		curWtsSt += hiddenNodes*hiddenNodes
+
+	printMatrixAsList(vals[curWtsSt:], hiddenNodes, outNodes, firstNode=curNodeSt, useWeights=useWeights)
 
 cliParser = argparse.ArgumentParser(description='genome2list.py - converiting serialized connectivity matrices to adjecency lists since 2015',
 																		epilog='Use the program by piping the genomes into its stdin and getting adjacency lists out of stdout.'
@@ -63,4 +78,5 @@ if args.inNodes is None and args.outNodes is None:
 elif args.hiddenNodes is None:
 	printInputOutputGraph(weights, args.inNodes, args.outNodes, useWeights=args.w)
 else:
-	printInputHiddenOutputGraph(weights, args.inNodes, args.outNodes, args.hiddenNodes, useWeights=args.w)
+	absHiddenNodes = args.hiddenNodes if args.hiddenNodes > 0 else -1*args.hiddenNodes
+	printInputHiddenOutputGraph(weights, args.inNodes, args.outNodes, absHiddenNodes, useWeights=args.w, recurrentHidden=(args.hiddenNodes<0))
